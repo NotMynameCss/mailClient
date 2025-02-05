@@ -1,4 +1,5 @@
-import mysql.connector
+# kết nối CSDL
+import dbConnector as dbconnect
 # dùng cho gửi email
 import smtplib
 from email.mime.text import MIMEText
@@ -14,20 +15,12 @@ import email
 EMAIL_SENDER = "modpackphieuluu@gmail.com"
 APP_PASSWORD = "gxqp sfjo ptem yyln"
 
-# Kết nối MySQL
-def connect_db():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",       # Thay bằng user MySQL của bạn
-        password="Ailienz_05",  # Thay bằng mật khẩu MySQL
-        database="mail_client"
-    )
 
 
 # Hàm lưu email vào MySQL
 def save_email(sender, receiver, subject, body):
     try:
-        conn = connect_db()
+        conn = dbconnect.connect_db()
         cursor = conn.cursor()
 
         # Kiem tra email da co trong DB chua

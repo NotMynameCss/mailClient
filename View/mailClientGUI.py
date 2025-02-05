@@ -1,19 +1,18 @@
+################################ khắc phục lỗi đường dẫn, đảm bảo đường dẫn chính xác
+import sys
+import os
+# Thêm thư mục gốc của dự án vào sys.path: sử dụng để đường dẫn chính xác
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+################################ giao diện
 import tkinter as tk
 from tkinter import ttk
-import mysql.connector
-
-# Kết nối MySQL
-def connect_db():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",       # Thay bằng user MySQL của bạn
-        password="your_password",  # Thay bằng mật khẩu MySQL
-        database="mail_client"
-    )
+################################ cơ sở dữ liệu
+import Model.dbConnector as dbconnect
 
 # Hàm lấy danh sách email từ MySQL
 def fetch_emails():
-    conn = connect_db()
+    conn = dbconnect.connect_db()
     cursor = conn.cursor()
     cursor.execute("SELECT id, sender, subject, timestamp FROM emails ORDER BY timestamp DESC")
     emails = cursor.fetchall()
