@@ -8,7 +8,7 @@ Mô hình: Client - Server
 Đối tượng sử dụng: đa người dùng  
 ## các chức năng trong tương lai:
 ### chức năng đăng ký & đăng nhập & lưu app Password trong mysql (có mã hóa)  
-- Các bước:
+- Các bước:  
 1️⃣ Tạo bảng users trong MySQL  
 2️⃣ Cài đặt thư viện mã hóa App Password  
 3️⃣ Viết Controller để xử lý Đăng ký & Đăng nhập  
