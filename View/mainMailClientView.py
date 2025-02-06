@@ -11,7 +11,8 @@ from tkinter import ttk, messagebox
 import Controller.mailReadDetailFunction as readEmailDetail
 # hiển thị danh sách email
 import Controller.mailFetchFunction as fetchEmails
-
+# gửi mail
+import Controller.mailSendFunction as sendEmail
 
 
 
@@ -42,6 +43,28 @@ def show_email_details(event):
             text_body.config(state="disabled")  # Không cho chỉnh sửa
             text_body.pack(padx=10, pady=5, fill="both", expand=True)
 
+#################################### chức năng gửi email từ giao diện
+# Gửi email từ giao diện
+def send_email_ui():
+    to_email = entry_receiver.get()
+    subject = entry_subject.get()
+    body = text_body.get("1.0", tk.END)
+
+    if not to_email or not subject or not body.strip():
+        messagebox.showerror("Lỗi", "Vui lòng nhập đầy đủ thông tin!")
+        return
+
+    sendEmail.send_email(to_email, subject, body)
+    messagebox.showinfo("Thành công", "Email đã được gửi thành công!")
+
+    # Xóa nội dung sau khi gửi
+    entry_receiver.delete(0, tk.END)
+    entry_subject.delete(0, tk.END)
+    text_body.delete("1.0", tk.END)
+
+    # Cập nhật danh sách email
+    update_email_list()
+
 
 #################################### chức năng hiển thị danh sách email
 
@@ -54,7 +77,7 @@ def update_email_list():
     for email in emails:
         tree.insert("", "end", values=email)
 
-# Giao diện Tkinter
+########################### Giao diện của main chương trình
 root = tk.Tk()
 root.title("Mail Client - Danh sách Email")
 root.geometry("600x400")
@@ -79,7 +102,25 @@ tree.bind("<Double-1>", show_email_details)
 refresh_button = tk.Button(root, text="Làm mới", command=update_email_list)
 refresh_button.pack(pady=10)
 
+######################## giao diện gửi email
+frame_send = tk.Frame(root)
+frame_send.pack(pady=10, fill="x", padx=10)
 
+tk.Label(frame_send, text="Người nhận:", font=("Arial", 12)).pack(anchor="w")
+entry_receiver = tk.Entry(frame_send, width=50)
+entry_receiver.pack(pady=5)
+
+tk.Label(frame_send, text="Chủ đề:", font=("Arial", 12)).pack(anchor="w")
+entry_subject = tk.Entry(frame_send, width=50)
+entry_subject.pack(pady=5)
+
+tk.Label(frame_send, text="Nội dung:", font=("Arial", 12)).pack(anchor="w")
+text_body = tk.Text(frame_send, wrap="word", height=5, width=50)
+text_body.pack(pady=5)
+
+# Nút gửi email
+send_button = tk.Button(frame_send, text="Gửi Email", command=send_email_ui, bg="green", fg="white", font=("Arial", 12))
+send_button.pack(pady=5)
 
 ######################## Hiển thị danh sách email khi mở chương trình
 update_email_list()
