@@ -13,8 +13,8 @@ import Controller.mailReadDetailFunction as readEmailDetail
 import Controller.mailFetchFunction as fetchEmails
 # gửi mail
 import Controller.mailSendFunction as sendEmail
-
-
+# xóa mail
+import Controller.mailRemoveFunction as removeEmail
 
 #################################### chức năng đọc mail chi tiết
 # Hiển thị cửa sổ xem chi tiết email
@@ -65,6 +65,21 @@ def send_email_ui():
     # Cập nhật danh sách email
     update_email_list()
 
+#################################### chức năng xóa email khi dùng nút xóa
+def delete_email_ui():
+    selected_item = tree.selection()
+    if not selected_item:
+        messagebox.showerror("Lỗi", "Vui lòng chọn mail cần xóa!")
+        return
+    
+    item = tree.item(selected_item)
+    email_id = item["values"][0] # lấy ID email được chọn
+
+    confirm = messagebox.askyesno("Thông báo Xác nhận", "Bạn có muốn xóa email này?")
+    if confirm:
+        removeEmail.delete_email(email_id)
+        messagebox.showinfo("Thông báo Thành công", "Email đã được xóa!")
+        update_email_list()
 
 #################################### chức năng hiển thị danh sách email
 
@@ -80,7 +95,7 @@ def update_email_list():
 ########################### Giao diện của main chương trình
 root = tk.Tk()
 root.title("Mail Client - Danh sách Email")
-root.geometry("600x400")
+root.geometry("600x600")
 
 # Tiêu đề
 label = tk.Label(root, text="Danh sách Email", font=("Arial", 14))
@@ -95,8 +110,13 @@ tree.heading("Chủ đề", text="Chủ đề")
 tree.heading("Thời gian", text="Thời gian")
 tree.pack(expand=True, fill="both")
 
+############################################ các giao diện nút
 # thêm sự kiện nhấp vào để đọc mail chi tiết
 tree.bind("<Double-1>", show_email_details)
+
+# Thêm nút "Xóa Email"
+delete_button = tk.Button(root, text="Xóa Email", command=delete_email_ui, bg="red", fg="white", font=("Arial", 12))
+delete_button.pack(pady=5)
 
 # Nút làm mới danh sách
 refresh_button = tk.Button(root, text="Làm mới", command=update_email_list)
