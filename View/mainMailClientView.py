@@ -15,6 +15,10 @@ import Controller.mailFetchFunction as fetchEmails
 import Controller.mailSendFunction as sendEmail
 # xóa mail
 import Controller.mailRemoveFunction as removeEmail
+# search Mail
+import Controller.mailSearchFunction as searchMail
+
+
 
 #################################### chức năng đọc mail chi tiết
 # Hiển thị cửa sổ xem chi tiết email
@@ -85,12 +89,24 @@ def delete_email_ui():
 
 
 # Cập nhật danh sách email vào bảng
-def update_email_list():
+def update_email_list(emails=None):
     for row in tree.get_children():
         tree.delete(row)
-    emails = fetchEmails.fetch_emails()
+    if emails is None:
+        emails = fetchEmails.fetch_emails()
     for email in emails:
         tree.insert("", "end", values=email)
+
+########################### chức năng search email
+# Xử lý tìm kiếm email
+def search_email_ui():
+    keyword = entry_search.get()
+    if not keyword:
+        messagebox.showerror("Lỗi", "Vui lòng nhập từ khóa tìm kiếm!")
+        return
+
+    result = searchMail.search_emails(keyword)
+    update_email_list(result)  # Hiển thị kết quả tìm kiếm
 
 ########################### Giao diện của main chương trình
 root = tk.Tk()
@@ -100,6 +116,15 @@ root.geometry("600x600")
 # Tiêu đề
 label = tk.Label(root, text="Danh sách Email", font=("Arial", 14))
 label.pack(pady=10)
+# thanh tìm kiếm
+frame_search = tk.Frame(root)
+frame_search.pack(pady=5, fill="x", padx=10)
+
+entry_search = tk.Entry(frame_search, width=40)
+entry_search.pack(side="left", padx=5)
+search_button = tk.Button(frame_search, text="Tìm kiếm", command=search_email_ui)
+search_button.pack(side="left")
+
 
 # Tạo bảng danh sách email
 columns = ("ID", "Người gửi", "Chủ đề", "Thời gian")
